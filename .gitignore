@@ -234,5 +234,5 @@ node_modules
 .vscode
 env.yml
 data/**
-.serverless/**
+**/.serverless/**
 ssm*.json
