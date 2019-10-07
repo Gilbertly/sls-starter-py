@@ -5,8 +5,9 @@ verify_ssl = true
 
 [dev-packages]
 pytest = "*"
-black = "*"
 mypy = "*"
+flake8 = "*"
+autopep8 = "*"
 
 [packages]
 boto3 = "*"
