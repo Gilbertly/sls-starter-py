@@ -8,6 +8,7 @@ pytest = "*"
 mypy = "*"
 flake8 = "*"
 autopep8 = "*"
+sphinx = "*"
 
 [packages]
 boto3 = "*"
