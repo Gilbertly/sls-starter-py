@@ -1,0 +1,31 @@
+{
+  "name": "aws-python",
+  "version": "1.0.0",
+  "description": "Essential aws-python sample project.",
+  "main": "index.js",
+  "scripts": {
+    "lint:tests": "black --config ./config/pyproject.toml",
+    "validate:cfn": "cat .serverless/*template*.json | xargs -0 aws cloudformation validate-template --template-body",
+    "validate:sls": "sls deploy --stage dev --noDeploy",
+    "validate:all": "npm run validate:sls && npm run validate:cfn && npm run lint:tests",
+    "deploy:dev": "sls deploy --stage dev",
+    "deploy:prod": "sls deploy --stage prod",
+    "ssm:download": "python3 src/scripts/ssm_params.py --action=download",
+    "ssm:update": "python3 src/scripts/ssm_params.py --action=update",
+    "ssm:delete": "python3 src/scripts/ssm_params.py --action=delete"
+  },
+  "author": "Gilbert Gathara",
+  "license": "MIT",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint:tests",
+      "pre-push": "npm run lint:tests && npm run validate:sls"
+    }
+  },
+  "devDependencies": {
+    "@sentry/cli": "^1.47.2",
+    "husky": "^3.0.8",
+    "serverless": "^1.53.0",
+    "serverless-python-requirements": "^5.0.0"
+  }
+}
