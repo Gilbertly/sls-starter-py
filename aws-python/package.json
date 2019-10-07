@@ -4,7 +4,7 @@
   "description": "Essential aws-python sample project.",
   "main": "index.js",
   "scripts": {
-    "lint:tests": "black --config ./config/pyproject.toml",
+    "lint:tests": "autopep8 --in-place --aggressive -r src && flake8",
     "validate:cfn": "cat .serverless/*template*.json | xargs -0 aws cloudformation validate-template --template-body",
     "validate:sls": "sls deploy --stage dev --noDeploy",
     "validate:all": "npm run validate:sls && npm run validate:cfn && npm run lint:tests",
