@@ -1,0 +1,57 @@
+service:
+  name: aws-python
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  config: ${file(./config/env.yml):${opt:stage, 'dev'}}
+  pythonRequirements:
+    dockerizePip: non-linux
+    useDownladCache: true
+    usePipenv: true
+    slim: true
+    layer:
+      name: ${self:provider.stage}-${self:service.name}
+      description: Python pipenv dependencies layer.
+      licenseInfo: MIT
+      compatibleRuntimes:
+        - python3.7
+
+provider:
+  name: aws
+  runtime: python3.7
+  timeout: 10 # seconds
+  stage: ${self:custom.config.STAGE}
+  region: ${self:custom.config.REGION}
+  stackName: ${self:provider.stage}-${self:service.name}
+  logRetentionInDays: 7
+  tags:
+    project: ${self:provider.stage}-${self:service.name}
+  deploymentBucket:
+    name: ${self:custom.config.DEPLOYMENT_BUCKET}
+    serverSideEncryption: AES256
+  apiGateway:
+    restApiId: ${ssm:/aws_python/sls/restapi_id}
+    restApiRootResourceId: ${ssm:/aws_python/sls/restapi_root_resource_id}
+  environment:
+    SENTRY_DSN: ${ssm:/aws_python/sls/sentry_dsn}
+
+package:
+  include:
+    - src/**
+  exclude:
+    - node_modules/**
+  excludeDevDependencies: true
+
+functions:
+  helloFunction:
+    name: hello_function
+    handler: src/functions/hello.handler
+    description: Basic sample function.
+    layers:
+      - !Ref PythonRequirementsLambdaLayer
+
+resources:
+  - ${file(./aws/sls_iam_roles.yml)}
+  - ${file(./aws/sls_lambda_dlq.yml)}
