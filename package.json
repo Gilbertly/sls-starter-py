@@ -8,7 +8,7 @@
     "lint": "autopep8 --in-place --aggressive -r src && flake8",
     "lint:test": "npm run lint && npm run test",
     "validate:sls": "sls deploy --stage dev --noDeploy",
-    "validate:all": "npm run validate:sls && npm run lint:tests && npm audit fix",
+    "validate:all": "npm run validate:sls && npm run lint:test && npm audit fix",
     "deploy:dev": "sls deploy --stage dev",
     "deploy:prod": "sls deploy --stage prod",
     "ssm:download": "python3 src/scripts/ssm_params.py --action=download",
