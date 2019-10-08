@@ -55,3 +55,4 @@ functions:
 resources:
   - ${file(./aws/sls_iam_roles.yml)}
   - ${file(./aws/sls_lambda_dlq.yml)}
+  - ${file(./aws/dynamodb_hello.yml)}
