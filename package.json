@@ -4,9 +4,11 @@
   "description": "Essential aws-python sample project.",
   "main": "index.js",
   "scripts": {
-    "lint:tests": "autopep8 --in-place --aggressive -r src && flake8",
+    "test": "pytest --cov=./",
+    "lint": "autopep8 --in-place --aggressive -r src && flake8",
+    "lint:test": "npm run lint && npm run test",
     "validate:sls": "sls deploy --stage dev --noDeploy",
-    "validate:all": "npm run validate:sls && npm run lint:tests",
+    "validate:all": "npm run validate:sls && npm run lint:tests && npm audit fix",
     "deploy:dev": "sls deploy --stage dev",
     "deploy:prod": "sls deploy --stage prod",
     "ssm:download": "python3 src/scripts/ssm_params.py --action=download",
@@ -20,7 +22,7 @@
   "license": "MIT",
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint:tests",
+      "pre-commit": "npm run lint:test",
       "pre-push": "npm run validate:all"
     }
   },
