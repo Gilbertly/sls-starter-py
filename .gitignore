@@ -235,4 +235,5 @@ node_modules
 env.yml
 data/**
 **/.serverless/**
+**/.dynamodb/**
 ssm*.json

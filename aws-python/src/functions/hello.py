@@ -11,4 +11,8 @@ def handler(event, context):
   except Exception as error:
     capture_exception(error)
 
-  return f"Event param: '{event_param}'"
+  return say_hello(event_param)
+
+
+def say_hello(param):
+  return f'Hello {param}!'
