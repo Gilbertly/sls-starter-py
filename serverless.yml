@@ -8,6 +8,8 @@ plugins:
 
 custom:
   config: ${file(./config/env.yml):${opt:stage, 'dev'}}
+  serverless-offline:
+    port: ${self:custom.config.API_PORT, '6969'}
   dynamodb:
     seed:
       hello:
