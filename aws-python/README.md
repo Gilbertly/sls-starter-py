@@ -15,4 +15,10 @@ $ export AWS_PROFILE=<PROFILE_NAME>
 
 // validate setup
 $ npm run validate:all
+
+// install dynamodb-local
+$ npm run ddb:install
+
+// start-up apigateway and dynamodb localhost
+$ npm run api:start
 ```
