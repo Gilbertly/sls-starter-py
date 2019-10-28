@@ -1,0 +1,24 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+mypy = "*"
+flake8 = "*"
+autopep8 = "*"
+sphinx = "*"
+codecov = "*"
+pytest-cov = "*"
+
+[packages]
+boto3 = "*"
+python-dotenv = "*"
+sentry-sdk = "*"
+
+[requires]
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases = false
