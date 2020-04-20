@@ -63,6 +63,7 @@ package:
   exclude:
     - .git/**
     - .serverless/**
+    - .pytest_cache/**
     - src/__tests__/**
     - src/utils/**
     - dependencies.zip
