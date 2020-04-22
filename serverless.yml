@@ -64,6 +64,7 @@ package:
     - .git/**
     - .serverless/**
     - .pytest_cache/**
+    - ./mypy_cache/**
     - src/__tests__/**
     - src/utils/**
     - dependencies.zip
