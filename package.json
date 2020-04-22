@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint:fix": "autopep8 --in-place --aggressive -r src && flake8",
-    "lint:test": "npm run lint:fix && pytest --cov=./ && mypy --config-file=mypy.ini ./src/**/*.py",
+    "lint:test": "npm run lint:fix && pytest --cov=./ && mypy ./src/**/*.py",
     "validate:sls": "sls deploy --stage dev --noDeploy",
     "validate:all": "npm run validate:sls && npm run lint:test",
     "deploy:dev": "sls deploy --stage dev",
