@@ -16,6 +16,7 @@ pytest-cov = "*"
 boto3 = "*"
 python-dotenv = "*"
 sentry-sdk = "*"
+botocore = "*"
 
 [requires]
 python_version = "3.7"
