@@ -1,15 +1,15 @@
 service:
-  name: aws-python
+  name: starter-py
 
 plugins:
+  - serverless-pseudo-parameters
   - serverless-python-requirements
   - serverless-dynamodb-local
   - serverless-offline
 
 custom:
-  config: ${file(./config/env.yml):${opt:stage, 'dev'}}
   serverless-offline:
-    port: ${self:custom.config.API_PORT, '6969'}
+    port: ${opt:apiport, '6969'}
   dynamodb:
     seed:
       hello:
@@ -19,7 +19,7 @@ custom:
     migration:
       dir: ./data/migrations
     start:
-      port: ${self:custom.config.DDB_PORT, '6970'}
+      port: ${opt:ddbport, '6970'}
       inMemory: true
       migrate: true
       seed: true
@@ -31,35 +31,50 @@ custom:
     slim: true
     layer:
       name: ${self:provider.stage}-${self:service.name}
-      description: Python pipenv dependencies layer.
+      description: Python pipenv project dependencies.
       licenseInfo: MIT
       compatibleRuntimes:
         - python3.7
+  ssmPath:
+    sentry_dsn: ${ssm:/starter_py/sentry_dsn, ''}
 
 provider:
   name: aws
   runtime: python3.7
   timeout: 10 # seconds
-  stage: ${self:custom.config.STAGE}
-  region: ${self:custom.config.REGION}
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
   stackName: ${self:provider.stage}-${self:service.name}
   logRetentionInDays: 7
+  iamRoleStatements: ${file(./aws/iam_statements.yml)}
   tags:
     project: ${self:provider.stage}-${self:service.name}
-  deploymentBucket:
-    name: ${self:custom.config.DEPLOYMENT_BUCKET}
-    serverSideEncryption: AES256
+  apiKeys:
+    - ${self:provider.stage}-${self:service.name}
   apiGateway:
-    restApiId: ${ssm:/aws_python/sls/restapi_id}
-    restApiRootResourceId: ${ssm:/aws_python/sls/restapi_root_resource_id}
+    apiKeySourceType: HEADER
+  deploymentBucket:
+    blockPublicAccess: true
+    serverSideEncryption: AES256
   environment:
-    SENTRY_DSN: ${ssm:/aws_python/sls/sentry_dsn}
+    SENTRY_DSN: ${self:custom.ssmPath.sentry_dsn}
 
 package:
+  exclude:
+    - .git/**
+    - .serverless/**
+    - .pytest_cache/**
+    - .mypy_cache/**
+    - src/__tests__/**
+    - src/utils/**
+    - dependencies.zip
+    - node_modules/**
+    - coverage/**
+    - aws/**
   include:
     - src/**
-  exclude:
-    - node_modules/**
+  compatibleRuntimes:
+    - python3.7
   excludeDevDependencies: true
 
 functions:
@@ -67,10 +82,21 @@ functions:
     name: hello_function
     handler: src/functions/hello.handler
     description: Basic sample function.
+    events:
+      - http:
+          path: /test
+          method: get
+          request:
+            parameters:
+              queryStrings:
+                message: false
+              paths:
+                message: false
+          cors: true
+          private: true
     layers:
       - !Ref PythonRequirementsLambdaLayer
 
 resources:
-  - ${file(./aws/sls_iam_roles.yml)}
-  - ${file(./aws/sls_lambda_dlq.yml)}
+  - ${file(./aws/lambda_dlq.yml)}
   - ${file(./aws/dynamodb_hello.yml)}
