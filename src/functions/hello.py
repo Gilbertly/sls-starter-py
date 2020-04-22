@@ -14,5 +14,6 @@ def handler(event, context):
   return say_hello(event_param)
 
 
-def say_hello(param):
+def say_hello(param: str = 'there') -> str:
+  '''Returns a greeting message.'''
   return f'Hello {param}!'
