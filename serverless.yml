@@ -4,6 +4,8 @@ service:
 plugins:
   - serverless-pseudo-parameters
   - serverless-python-requirements
+  - serverless-prune-plugin
+  - serverless-iam-roles-per-function
   - serverless-dynamodb-local
   - serverless-offline
 
@@ -35,6 +37,12 @@ custom:
       licenseInfo: MIT
       compatibleRuntimes:
         - python3.7
+  serverless-iam-roles-per-function:
+    defaultInherit: true
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 5
   ssmPath:
     sentry_dsn: ${ssm:/starter_py/sentry_dsn, ''}
 
